@@ -158,8 +158,8 @@ for freq = freqs,
     % edge lengths
     l = sqrt( sum( ( r( edges(:,1),:) - r( edges(:,2),:) ).^2, 2 ) );
 
-    % fluxes for all edges, nedges-by-nports. only the boundary fluxes make sense.
-    ef = l./2.*( vf( edges(:,1), : ) + vf( edges(:,2), : ) );
+    % edge fluxes, nedges-by-nports. only the boundary fluxes make sense.
+    ef = repmat(l, 1, nports)/2.*( vf( edges(:,1), : ) + vf( edges(:,2), : ) );
 
     % Port currents, which is also the admittance matrix since we applied
     % unit voltages to the ports.
