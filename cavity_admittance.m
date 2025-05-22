@@ -3,24 +3,22 @@
 %
 
 % The geometry
-inch2meter = 2.54e-2;
-mil2meter = 1.0e-3*inch2meter;
-d = (10.0 + 1.35 + 10.0)*mil2meter; % plane-to-plane separation
-w = 1e-2;  % cavity width  (x size)
-l = 2e-2;  % cavity length (y size)
+d = 5e-4; % plane-to-plane separation
+w = 5e-2;  % cavity width  (x size)
+l = 1e-1;  % cavity length (y size)
 x1 = -w/6;        % first port
 y1 = -l/2 + l/6;
 x2 =  w/4;        % second port
 y2 =  l/2 - l/6;
 rp =  w/80;
 
-% Dielectric params
-lt = 0.02;
-er0 = 4.3;
+% Dielectric params. Air for the conductor loss experiments.
+lt = 0;
+er0 = 1;
 fr = 1e9;
 
-% metal conductivity
-sigma = 5.8e7;
+% metal conductivity. Very high for the conductor loss experiments.
+sigma = 5.8e7 * 1e-3;
 
 % signed distance function for a rectangle
 drectangle = @(p,x1,x2,y1,y2) ...
@@ -41,7 +39,7 @@ fd = @(p) max( foutb(p), max( -fp1(p), -fp2(p) ) );
 
 % Signed distance function for (relative) mesh distribution.
 % We want it denser closer to the ports.
-fh = @(p) 0.0002 + 0.3*min(fp1(p), fp2(p));
+fh = @(p) 0.001 + 0.3*min(fp1(p), fp2(p));
 
 h0 = rp/2;
 
@@ -104,7 +102,7 @@ P = sparse( [ ep1*0+1 ; ep2*0+2 ], [ ep1 ; ep2 ], 1.0, nports, nedges );
 
 % angular frequencies
 % freqs = 1e9*2*pi;
-freqs = linspace(1e5, 1e11, 201)*2*pi;
+freqs = linspace(1e6, 1e9, 201)*2*pi;
 
 Yf = [] ; % Simulated admittance for all frequency points
 
@@ -169,7 +167,7 @@ for freq = freqs,
     
 end
 
-tswrite( 'cavity_admittance.y2p', freqs/(2*pi), Yf, 'Y', 50 );
+tswrite( 'cavity_admittance_highloss.y2p', freqs/(2*pi), Yf, 'Y', 50 );
 
 %% colormap('jet')
 %% patch( 'vertices', r, 'faces', tri, 'facevertexcdata', u( :, 1 ),
